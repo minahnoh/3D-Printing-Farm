@@ -2,6 +2,7 @@
 
 ## Operation scenario 
 
+```mermaid
 sequenceDiagram
     participant PS as Pallet Storage
     participant RW as Resin Worker
