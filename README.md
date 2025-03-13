@@ -1,7 +1,6 @@
 # SimPy based 3D Print Farm
 
 ## Operation scenario 
-
 ```mermaid
 sequenceDiagram
     participant PS as Pallet Storage
@@ -53,3 +52,4 @@ sequenceDiagram
             end
         end
     end
+```
