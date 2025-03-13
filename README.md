@@ -3,6 +3,45 @@
 ## Operation scenario 
 ```mermaid
 sequenceDiagram
+    participant C as Customer
+    participant M as Manager
+    participant P as 3D Printers
+    participant WM as Washing Machines
+    participant DM as Drying Machines
+    participant IW as Inspect Workers
+
+    %% Process: Order to Job Creation
+    autonumber
+    C->>M: Creates and sends order
+    M->>P: Converts order into job and sends to 3D Printers
+
+    %% Process 1: Printing Process
+    P-->>P: Builds the object
+
+    %% Process 2: Washing Process
+    P->>WM: Sends job to Washing Machines
+    WM-->>WM: Performs washing
+
+    %% Process 3: Drying Process
+    WM->>DM: Sends job to Drying Machines
+    DM-->>DM: Performs air-drying
+
+    %% Process 4: Inspection Process
+    DM->>IW: Sends job to Inspect Workers
+    loop Each Item in Job
+        IW-->>IW: Inspects item for defects
+        alt Defect Found
+            IW->>P: Creates new job for defective items and sends to 3D Printers
+            Note right of P: Restart from 3D Printers
+        else Good Item
+            IW-->>IW: Keeps item as completed
+        end
+    end
+```
+<!-- 
+############## AMR을 고려한 경우 ################# 
+```mermaid
+sequenceDiagram
     participant PS as Pallet Storage
     participant RW as Resin Worker
     participant IW as Inspection Workers
@@ -52,4 +91,4 @@ sequenceDiagram
             end
         end
     end
-```
+``` -->
