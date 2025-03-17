@@ -1,6 +1,3 @@
-# environment_Customer.py
-import simpy
-import random
 from config_SimPy import *
 
 
@@ -167,19 +164,3 @@ class Customer:
         #     self.logger.log_event(
         #         "Order", f"Sending Order {order.id_order} to processor")
         self.order_receiver.receive_order(order)
-
-
-class SimpleLogger:
-    """Class providing simple logging functionality"""
-
-    def __init__(self, env):
-        self.env = env
-
-    def log_event(self, event_type, message):
-        """Log events with timestamp"""
-        current_time = self.env.now
-        days = int(current_time // (24 * 60))
-        hours = int((current_time % (24 * 60)) // 60)
-        minutes = int(current_time % 60)
-        timestamp = f"{days:02d}:{hours:02d}:{minutes:02d}"
-        print(f"[{timestamp}] {event_type}: {message}")

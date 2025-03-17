@@ -1,9 +1,24 @@
-# main_Customer.py
 import simpy
 import time
 import random
 from config_SimPy import *
-from environment_Customer import Customer, SimpleOrderReceiver, SimpleLogger
+from base_Customer import Customer, SimpleOrderReceiver
+
+
+class SimpleLogger:
+    """Class providing simple logging functionality"""
+
+    def __init__(self, env):
+        self.env = env
+
+    def log_event(self, event_type, message):
+        """Log events with timestamp"""
+        current_time = self.env.now
+        days = int(current_time // (24 * 60))
+        hours = int((current_time % (24 * 60)) // 60)
+        minutes = int(current_time % 60)
+        timestamp = f"{days:02d}:{hours:02d}:{minutes:02d}"
+        print(f"[{timestamp}] {event_type}: {message}")
 
 
 def run_customer_simulation(seed=None):
