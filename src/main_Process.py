@@ -44,16 +44,16 @@ def run_process_validation():
     """Process Class Validation Test Based on Integrated Interface"""
     print("================ Process Class Validation Test Based on Integrated Interface ================")
 
-    # 1. Set up simulation environment
+    # Set up simulation environment
     global env
     env = simpy.Environment()
     logger = SimpleLogger()
 
-    # 2. Create basic processes (just 2)
+    # Create basic processes (just 2)
     process_a = Process("Process_A", env, logger)
     process_b = Process("Process_B", env, logger)
 
-    # 3. Register processors for each process
+    # Register processors for each process
     machine1 = Machine(1, "Process_A", f"Machine_A{1}", 30, 2)
     process_a.register_processor(machine1)
     machine2 = Machine(2, "Process_A", f"Machine_A{2}", 30, 1)
@@ -61,10 +61,10 @@ def run_process_validation():
     worker = Worker(1, f"Worker_B1", 15)
     process_b.register_processor(worker)
 
-    # 4. Set up process connections
+    # Set up process connections
     process_a.connect_to_next_process(process_b)
 
-    # 5. Create test jobs and assign to first process
+    # Create test jobs and assign to first process
     jobs = generate_jobs(4, 2)  # 4 jobs, 2 items each
     print(f"\n{len(jobs)} test jobs created")
 
@@ -72,13 +72,13 @@ def run_process_validation():
         print(f"Assigned job {job.id_job} to Process A")
         process_a.add_to_queue(job)
 
-    # 6. Run simulation
+    # Run simulation
     print("\nStarting simulation...")
     sim_duration = 500  # Test simulation duration (minutes)
     env.process(run_until(env, sim_duration))
     env.run(until=sim_duration)  # Explicitly add until parameter
 
-    # 7. Check results
+    # Check results
     print("\n================ Simulation Results ================")
     print(f"Process A completed jobs: {len(process_a.completed_jobs)}")
     print(f"Process B completed jobs: {len(process_b.completed_jobs)}")

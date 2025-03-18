@@ -2,6 +2,21 @@ import simpy
 
 
 class Job:
+    """
+    Job class to represent a job in the manufacturing process
+
+    Attributes:
+        id_job (int): Unique job identifier
+        workstation (dict): Current workstation assignment
+        list_items (list): List of items in the job
+        time_processing_start (float): Time when processing started
+        time_processing_end (float): Time when processing ended
+        time_waiting_start (float): Time when waiting started
+        time_waiting_end (float): Time when waiting ended
+        is_reprocess (bool): Flag for reprocessed jobs
+        processing_history (list): List of processing history
+    """
+
     def __init__(self, id_job, list_items):
         self.id_job = id_job
         self.workstation = {"Process": None, "Machine": None, "Worker": None}
@@ -17,7 +32,14 @@ class Job:
 
 
 class JobStore(simpy.Store):
-    """Job queue management class that inherits SimPy Store"""
+    """
+    Job queue management class that inherits SimPy Store
+
+    Attributes:
+        env (simpy.Environment): Simulation environment
+        name (str): Name of the JobStore
+        queue_length_history (list): Queue length
+    """
 
     def __init__(self, env, name="JobStore"):
         super().__init__(env)

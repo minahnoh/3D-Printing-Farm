@@ -3,6 +3,21 @@ from config_SimPy import *
 
 
 class Worker:
+    """
+    Worker class to represent a worker in the manufacturing process
+    One type of processor in the simulation
+
+    Attributes:
+        type_processor (str): Type of processor (Worker)
+        id_worker (int): Worker ID
+        name_worker (str): Worker name
+        available_status (bool): Worker availability status
+        working_job (Job): Job currently being processed
+        processing_time (int): Time taken to process a job
+        busy_time (int): Total time spent processing jobs
+        last_status_change (int): Time of last status change
+    """
+
     def __init__(self, id_worker, name_worker, processing_time):
         self.type_processor = "Worker"
         self.id_worker = id_worker
@@ -15,10 +30,28 @@ class Worker:
 
 
 class Machine:
-    def __init__(self, id_machine, id_process, name_machine, processing_time, capacity_jobs=1):
+    """
+    Machine class to represent a machine in the manufacturing process
+    One type of processor in the simulation
+
+    Attributes:
+        type_processor (str): Type of processor (Machine)
+        id_machine (int): Machine ID
+        name_process (str): Process name
+        name_machine (str): Machine name
+        available_status (bool): Machine availability status
+        list_working_jobs (list): List of jobs currently being processed
+        capacity_jobs (int): Maximum number of jobs that can be processed simultaneously
+        processing_time (int): Time taken to process a job
+        busy_time (int): Total time spent processing jobs
+        last_status_change (int): Time of last status change
+        allows_job_addition_during_processing (bool): Flag to allow job addition during processing
+    """
+
+    def __init__(self, id_machine, name_process, name_machine, processing_time, capacity_jobs=1):
         self.type_processor = "Machine"
         self.id_machine = id_machine
-        self.id_process = id_process
+        self.name_process = name_process
         self.name_machine = name_machine
         self.available_status = True
         self.list_working_jobs = []
@@ -30,7 +63,20 @@ class Machine:
 
 
 class ProcessorResource(simpy.Resource):
-    """Integrated processor (Machine, Worker) resource management class that inherits SimPy Resource"""
+    """
+    Integrated processor (Machine, Worker) resource management class that inherits SimPy Resource
+
+    Attributes: 
+        processor_type (str): Type of processor (Machine/Worker)
+        id (int): Processor ID
+        name (str): Processor name
+        allows_job_addition_during_processing (bool): Flag to allow job addition during processing
+        current_jobs (list): List of jobs currently being processed (Machines)
+        current_job (Job): Job currently being processed (Worker)
+        processing_time (int): Time taken to process a job
+        processing_started (bool): Flag to prevent further resource allocation after processing starts
+
+    """
 
     def __init__(self, env, processor):
         # Check processor type and set properties
@@ -66,7 +112,9 @@ class ProcessorResource(simpy.Resource):
         self.processing_started = False
 
     def request(self, *args, **kwargs):
-        """Override resource request - Check if addition during processing is allowed"""
+        """
+        Override resource request - Check if addition during processing is allowed
+        """
         # If already processing and addition not allowed, reject request
         if self.processing_started and not self.allows_job_addition_during_processing:
             # Return a dummy event that mimics SimPy request but waits indefinitely
@@ -83,7 +131,9 @@ class ProcessorResource(simpy.Resource):
         return super().request(*args, **kwargs)
 
     def release(self, request):
-        """Override resource release - Handle job completion"""
+        """
+        Override resource release - Handle job completion
+        """
         result = super().release(request)
 
         # Reset processing flag when all jobs are complete

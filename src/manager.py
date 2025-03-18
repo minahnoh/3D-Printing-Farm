@@ -1,5 +1,3 @@
-# manager.py
-import simpy
 from base_Job import Job
 from config_SimPy import *
 from specialized_Process import Proc_Build, Proc_Wash, Proc_Dry, Proc_Inspect
@@ -7,6 +5,16 @@ from base_Customer import OrderReceiver
 
 
 class Manager(OrderReceiver):
+    """
+    Manager class to control the manufacturing processes and track orders
+
+    Attributes:
+        env (simpy.Environment): Simulation environment
+        logger (Logger): Logger object for logging events
+        next_job_id (int): Next job ID counter
+        completed_orders (list): List of completed orders 
+    """
+
     def __init__(self, env, logger=None):
         self.env = env
         self.logger = logger
@@ -20,16 +28,16 @@ class Manager(OrderReceiver):
         # Tracking completed jobs and orders
         self.completed_orders = []
 
-        # Start rework process to periodically check for defects
-        self.rework_process = env.process(self.monitor_defects())
+        # When calling setup_processes, the manager (self) itself is also passed as an argument
+        self.setup_processes(manager=self)
 
-    def setup_processes(self):
+    def setup_processes(self, manager=None):
         """Create and connect all manufacturing processes"""
         # Create processes
         self.proc_build = Proc_Build(self.env, self.logger)
         self.proc_wash = Proc_Wash(self.env, self.logger)
         self.proc_dry = Proc_Dry(self.env, self.logger)
-        self.proc_inspect = Proc_Inspect(self.env, self.logger)
+        self.proc_inspect = Proc_Inspect(self.env, manager, self.logger)
 
         # Connect processes
         self.proc_build.connect_to_next_process(self.proc_wash)
@@ -125,17 +133,6 @@ class Manager(OrderReceiver):
                         "Manager", f"Created rework job {job.id_job} with {len(items_for_job)} defective items (added to end of queue)")
                     self.logger.log_event(
                         "Manager", f"Remaining defective items: {len(self.proc_inspect.defective_items)}")
-
-            # Additional placement policies can be implemented here if needed
-
-    def monitor_defects(self):
-        """Periodically check for defective items and create rework jobs"""
-        while True:
-            # Wait before checking
-            yield self.env.timeout(POLICY_CYCLE_TIME_TO_CHEK_DEFECT)
-
-            # Create jobs from defective items if possible
-            self.create_job_for_defects()
 
     def get_processes(self):
         """Return processes as a dictionary for statistics collection"""

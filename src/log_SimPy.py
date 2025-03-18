@@ -1,4 +1,3 @@
-# log_SimPy.py
 import pandas as pd
 import plotly.express as px
 import plotly.figure_factory as ff
@@ -65,7 +64,7 @@ class Logger:
         stats['total_completed_jobs'] = len(completed_jobs)
 
         # Process specific statistics
-        process_ids = [proc.id_process for proc in available_processes]
+        process_ids = [proc.name_process for proc in available_processes]
         process_jobs = {proc_id: [] for proc_id in process_ids}
 
         for job in completed_jobs:
@@ -120,7 +119,7 @@ class Logger:
                                 (times[i] - times[i-1])
 
                         avg_length = weighted_sum / self.env.now if self.env.now > 0 else 0
-                        stats[f'{proc.id_process}_avg_queue_length'] = avg_length
+                        stats[f'{proc.name_process}_avg_queue_length'] = avg_length
 
         # Count defective items if inspection process exists
         if proc_inspect and hasattr(proc_inspect, 'defective_items'):
@@ -228,7 +227,7 @@ class Logger:
                         x=times,
                         y=lengths,
                         mode='lines',
-                        name=proc.id_process
+                        name=proc.name_process
                     ))
 
         fig.update_layout(

@@ -11,26 +11,26 @@ def run_simulation(sim_duration=SIM_TIME):
     """Run the manufacturing simulation"""
     print("================ Manufacturing Process Simulation ================")
 
-    # 1. Setup simulation environment
+    # Setup simulation environment
     env = simpy.Environment()
 
-    # 2. Create logger with env
+    # Create logger with env
     logger = Logger(env)
 
-    # 3. Create manager and provide logger
+    # Create manager and provide logger
     manager = Manager(env, logger)
 
-    # 4. Create customer to generate orders
+    # Create customer to generate orders
     Customer(env, manager, logger)
 
-    # 5. Run simulation
+    # Run simulation
     print("\nStarting simulation...")
     print(f"Simulation will run for {sim_duration} minutes")
 
     # Run simulation
     env.run(until=sim_duration)
 
-    # 6. Collect and display results
+    # Collect and display results
     print("\n================ Simulation Results ================")
 
     # Get basic statistics from manager

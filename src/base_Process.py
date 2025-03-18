@@ -3,14 +3,31 @@ from base_Processor import ProcessorResource
 
 
 class Process:
-    def __init__(self, id_process, env, logger=None):
-        self.id_process = id_process
+    """
+    Base manufacturing process class for SimPy simulation
+
+    Attributes:
+        name_process (str): Process identifier
+        env (simpy.Environment): Simulation environment
+        logger (Logger): Event logger
+        list_processors (list): List of processors (Machines, Workers)
+        job_store (JobStore): Job queue management
+        processor_resources (dict): Processor resources (Machine, Worker)
+        completed_jobs (list): List of completed jobs
+        next_process (Process): Next process in the flow
+        resource_trigger (simpy.Event): Resource trigger event
+        job_added_trigger (simpy.Event): Job added trigger event
+        process (simpy.Process): Main process execution
+    """
+
+    def __init__(self, name_process, env, logger=None):
+        self.name_process = name_process
         self.env = env
         self.logger = logger
         self.list_processors = []  # Processor list
 
         # Implement queue with JobStore (Inherits SimPy Store)
-        self.job_store = JobStore(env, f"{id_process}_JobStore")
+        self.job_store = JobStore(env, f"{name_process}_JobStore")
 
         # Processor resource management
         self.processor_resources = {}  # {processor_id: ProcessorResource}
@@ -30,14 +47,14 @@ class Process:
 
         # if self.logger:
         #     self.logger.log_event(
-        #         "Process", f"Process {self.id_process} created")
+        #         "Process", f"Process {self.name_process} created")
 
     def connect_to_next_process(self, next_process):
         """Connect directly to next process. Used for process initialization."""
         self.next_process = next_process
         # if self.logger:
         #     self.logger.log_event(
-        #         "Process", f"Process {self.id_process} connected to {next_process.id_process}")
+        #         "Process", f"Process {self.name_process} connected to {next_process.name_process}")
 
     def register_processor(self, processor):
         """Register processor (Machine or Worker). Used for process initialization."""
@@ -58,12 +75,12 @@ class Process:
 
         # if self.logger:
         #     self.logger.log_event(
-        #         "Resource", f"Registered {processor.type_processor} {processor_name} to process {self.id_process}")
+        #         "Resource", f"Registered {processor.type_processor} {processor_name} to process {self.name_process}")
 
     def add_to_queue(self, job):
         """Add job to queue"""
         job.time_waiting_start = self.env.now
-        job.workstation["Process"] = self.id_process
+        job.workstation["Process"] = self.name_process
 
         # Add job to JobStore
         self.job_store.put(job)
@@ -75,50 +92,51 @@ class Process:
 
         if self.logger:
             self.logger.log_event(
-                "Queue", f"Added job {job.id_job} to {self.id_process} queue. Queue length: {self.job_store.size}")
+                "Queue", f"Added job {job.id_job} to {self.name_process} queue. Queue length: {self.job_store.size}")
 
     def run(self):
         """Event-based process execution"""
-        print(f"[DEBUG] {self.id_process}: run started")
+        # print(f"[DEBUG] {self.name_process}: run started")
 
         # Initial check (important!): Check if queue already has jobs at start
         if not self.job_store.is_empty:
-            print(
-                f"[DEBUG] {self.id_process}: jobs in initial queue, attempting resource allocation")
+            # print(
+            #     f"[DEBUG] {self.name_process}: jobs in initial queue, attempting resource allocation")
             yield self.env.process(self.seize_resources())
 
         while True:
-            print(f"[DEBUG] {self.id_process}: waiting for events")
+            # print(f"[DEBUG] {self.name_process}: waiting for events")
             # Wait for events: until job is added or resource is released
             yield self.job_added_trigger | self.resource_trigger
-            print(
-                f"[DEBUG] {self.id_process}: event triggered! time={self.env.now}")
+            # print(
+            #     f"[DEBUG] {self.name_process}: event triggered! time={self.env.now}")
 
             # If there are jobs in queue, attempt to allocate resources
             if not self.job_store.is_empty:
                 yield self.env.process(self.seize_resources())
 
     def seize_resources(self):
-        """Allocate available resources to jobs"""
-
-        print(
-            f"[DEBUG] {self.id_process}: seize_resources called, time={self.env.now}")
+        """
+        Allocate available resources (machines or workers) to jobs in queue
+        """
+        # print(
+        #     f"[DEBUG] {self.name_process}: seize_resources called, time={self.env.now}")
 
         # Find available processors
         available_processors = [
             res for res in self.processor_resources.values() if res.is_available]
 
-        print(
-            f"[DEBUG] {self.id_process}: available processors={len(available_processors)}")
+        # print(
+        #     f"[DEBUG] {self.name_process}: available processors={len(available_processors)}")
         # Debug: Print status of each resource
-        for res_id, res in self.processor_resources.items():
-            print(
-                f"[DEBUG] Processor {res_id}: is_available={res.is_available}, capacity={res.capacity}")
+        # for res_id, res in self.processor_resources.items():
+        #     print(
+        #         f"[DEBUG] Processor {res_id}: is_available={res.is_available}, capacity={res.capacity}")
 
         # If queue is empty or no available processors, stop
         if self.job_store.is_empty or not available_processors:
-            print(
-                f"[DEBUG] {self.id_process}: job allocation stopped - queue empty={self.job_store.is_empty}, no processors={not available_processors}")
+            # print(
+            #     f"[DEBUG] {self.name_process}: job allocation stopped - queue empty={self.job_store.is_empty}, no processors={not available_processors}")
             return
 
         # List of jobs assigned to each processor
@@ -126,8 +144,8 @@ class Process:
 
         # Try processing with all processors
         for processor_resource in available_processors:
-            print(
-                f"[DEBUG] {self.id_process}: attempting to process with {processor_resource.name}")
+            # print(
+            #     f"[DEBUG] {self.name_process}: attempting to process with {processor_resource.name}")
             # Determine number of jobs to assign (up to capacity)
             remaining_capacity = processor_resource.capacity - processor_resource.count
             jobs_to_assign = []
@@ -136,15 +154,15 @@ class Process:
             try:
                 for i in range(min(remaining_capacity, self.job_store.size)):
                     if not self.job_store.is_empty:
-                        print(
-                            f"[DEBUG] {self.id_process}: attempting to get job {i+1}")
+                        # print(
+                        #     f"[DEBUG] {self.name_process}: attempting to get job {i+1}")
                         job = yield self.job_store.get()
-                        print(
-                            f"[DEBUG] {self.id_process}: retrieved job {job.id_job}")
+                        # print(
+                        #     f"[DEBUG] {self.name_process}: retrieved job {job.id_job}")
                         jobs_to_assign.append(job)
             except Exception as e:
                 # Continue if unable to get job from JobStore
-                print(f"[ERROR] {self.id_process}: failed to get job: {e}")
+                print(f"[ERROR] {self.name_process}: failed to get job: {e}")
 
             # Assign jobs to processor
             if jobs_to_assign:
@@ -157,7 +175,14 @@ class Process:
             self.env.process(self.delay_resources(processor_resource, jobs))
 
     def delay_resources(self, processor_resource, jobs):
-        """Process jobs with processor (integrated for Machine, Worker)"""
+        """
+        Process jobs with processor (integrated for Machine, Worker)
+        Takes processing time into account 
+
+        Args:
+            processor_resource (ProcessorResource): Processor resource (Machine, Worker)
+            jobs (list): List of jobs to process        
+        """
         # Record time and register resources for all jobs
         for job in jobs:
             job.time_waiting_end = self.env.now
@@ -196,7 +221,7 @@ class Process:
 
             # Update job history
             for step in job.processing_history:
-                if step['process'] == self.id_process and step['end_time'] is None:
+                if step['process'] == self.name_process and step['end_time'] is None:
                     step['end_time'] = self.env.now
                     step['duration'] = self.env.now - step['start_time']
 
@@ -215,7 +240,14 @@ class Process:
         self.release_resources(processor_resource, request)
 
     def release_resources(self, processor_resource, request):
-        """Release processor resources and process job completion"""
+        """
+        Release processor resources and process job completion
+
+        Args:
+            processor_resource (ProcessorResource): Processor resource (Machine, Worker)
+            request (simpy.Request): Resource request 
+
+        """
         # Release processor resource
         processor_resource.release(request)
         processor_resource.finish_jobs()
@@ -228,12 +260,12 @@ class Process:
 
         if self.logger:
             self.logger.log_event(
-                "Resource", f"Released {processor_resource.name} in {self.id_process}")
+                "Resource", f"Released {processor_resource.name} in {self.name_process}")
 
     def create_process_step(self, job, processor_resource):
         """Create process step for job history"""
         return {
-            'process': self.id_process,
+            'process': self.name_process,
             'resource_type': processor_resource.processor_type,
             'resource_id': processor_resource.id,
             'resource_name': processor_resource.name,
@@ -247,7 +279,7 @@ class Process:
         if self.next_process:
             if self.logger:
                 self.logger.log_event(
-                    "Process Flow", f"Moving job {job.id_job} from {self.id_process} to {self.next_process.id_process}")
+                    "Process Flow", f"Moving job {job.id_job} from {self.name_process} to {self.next_process.name_process}")
             # Add job to next process queue
             self.next_process.add_to_queue(job)
             return True
@@ -255,5 +287,5 @@ class Process:
             # Final process or no next process set
             if self.logger:
                 self.logger.log_event(
-                    "Process Flow", f"Job {job.id_job} completed at {self.id_process} (final process)")
+                    "Process Flow", f"Job {job.id_job} completed at {self.name_process} (final process)")
             return False
