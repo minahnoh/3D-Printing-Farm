@@ -25,7 +25,7 @@ PALLET_SIZE_LIMIT = 50
 PROC_TIME_BUILD = 180  # Process time for build (unit: minutes)
 PROC_TIME_WASH = 120  # Process time for wash (unit: minutes)
 PROC_TIME_DRY = 120  # Process time for dry (unit: minutes)
-PROC_TIME_INSPECT = 30  # Process time for inspect per item (unit: minutes)
+PROC_TIME_INSPECT = 120  # Process time for inspect per item (unit: minutes)
 
 # Machine settings
 NUM_MACHINES_BUILD = 3  # Number of 3D print machines
@@ -36,7 +36,7 @@ CAPACITY_MACHINE_WASH = 2  # Job capacity for wash machines
 CAPACITY_MACHINE_DRY = 2  # Job capacity for dry machines
 
 # Process settings
-DEFECT_RATE_PROC_BUILD = 0.07  # 5% defect rate in build process
+DEFECT_RATE_PROC_BUILD = 0  # 5% defect rate in build process
 NUM_WORKERS_IN_INSPECT = 5  # Number of workers in inspection process
 
 
@@ -57,16 +57,16 @@ POLICY_ORDER_TO_JOB = "MAX_PER_JOB"
 
 
 def NUM_PATIENTS_PER_ORDER(): return random.randint(
-    5, 5)
+    2, 2)
 
 # Number of items per patient
 
 
 def NUM_ITEMS_PER_PATIENT(): return random.randint(
-    50, 70)
+    5, 5)
 
 
 # Customer settings
-CUST_ORDER_CYCLE = 7 * 24 * 60  # Customer order cycle (1 week in minutes)
+CUST_ORDER_CYCLE = 2 * 24 * 60  # Customer order cycle (1 week in minutes)
 # Order settings
 ORDER_DUE_DATE = 7 * 24 * 60  # Order due date (1 week in minutes)
