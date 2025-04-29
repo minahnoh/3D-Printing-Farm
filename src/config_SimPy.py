@@ -36,7 +36,7 @@ CAPACITY_MACHINE_WASH = 2  # Job capacity for wash machines
 CAPACITY_MACHINE_DRY = 2  # Job capacity for dry machines
 
 # Process settings
-DEFECT_RATE_PROC_BUILD = 0.1  # 5% defect rate in build process
+DEFECT_RATE_PROC_BUILD = 0  # 5% defect rate in build process
 NUM_WORKERS_IN_INSPECT = 5  # Number of workers in inspection process
 
 
