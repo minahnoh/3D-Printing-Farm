@@ -119,19 +119,19 @@ class Process:
         """
         Allocate available resources (machines or workers) to jobs in queue
         """
-        # print(
-        #     f"[DEBUG] {self.name_process}: seize_resources called, time={self.env.now}")
+        #print(
+        #   f"[DEBUG] {self.name_process}: seize_resources called, time={self.env.now}")
 
         # Find available processors
         available_processors = [
             res for res in self.processor_resources.values() if res.is_available]
 
-        # print(
-        #     f"[DEBUG] {self.name_process}: available processors={len(available_processors)}")
+        #print(
+        #   f"[DEBUG] {self.name_process}: available processors={len(available_processors)}")
         # Debug: Print status of each resource
-        # for res_id, res in self.processor_resources.items():
-        #     print(
-        #         f"[DEBUG] Processor {res_id}: is_available={res.is_available}, capacity={res.capacity}")
+        #for res_id, res in self.processor_resources.items():
+        #    print(
+        #        f"[DEBUG] Processor {res_id}: is_available={res.is_available}, capacity={res.capacity}")
 
         # If queue is empty or no available processors, stop
         if self.job_store.is_empty or not available_processors:
@@ -155,10 +155,10 @@ class Process:
                 for i in range(min(remaining_capacity, self.job_store.size)):
                     if not self.job_store.is_empty:
                         # print(
-                        #     f"[DEBUG] {self.name_process}: attempting to get job {i+1}")
+                        #    f"[DEBUG] {self.name_process}: attempting to get job {i+1}")
                         job = yield self.job_store.get()
                         # print(
-                        #     f"[DEBUG] {self.name_process}: retrieved job {job.id_job}")
+                        #    f"[DEBUG] {self.name_process}: retrieved job {job.id_job}")
                         jobs_to_assign.append(job)
             except Exception as e:
                 # Continue if unable to get job from JobStore
@@ -191,8 +191,8 @@ class Process:
             processor_resource.start_job(job)
 
             if self.logger:
-                self.logger.log_event(
-                    "Processing", f"Assigning job {job.id_job} to {processor_resource.name}")
+               self.logger.log_event(
+                   "Processing", f"Assigning job {job.id_job} to {processor_resource.name}")
 
             # Record job start time
             job.time_processing_start = self.env.now
@@ -230,8 +230,8 @@ class Process:
 
             # Log record
             if self.logger:
-                self.logger.log_event(
-                    "Processing", f"Completed processing job {job.id_job} on {processor_resource.name}")
+               self.logger.log_event(
+                   "Processing", f"Completed processing job {job.id_job} on {processor_resource.name}")
 
             # Send job to next process
             self.send_job_to_next(job)

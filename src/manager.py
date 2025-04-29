@@ -22,9 +22,6 @@ class Manager(OrderReceiver):
         # Next job ID counter
         self.next_job_id = 1
 
-        # Create and connect manufacturing processes
-        self.setup_processes()
-
         # Tracking completed jobs and orders
         self.completed_orders = []
 
@@ -80,6 +77,10 @@ class Manager(OrderReceiver):
                     self.logger.log_event(
                         "Manager", f"Created job {job.id_job} for patient {patient.id_patient} with {len(patient_items)} items")
                 self.proc_build.add_to_queue(job)
+
+                # Validation code
+                print("Manager", f"Created job {job.id_job} for patient {patient.id_patient} with {len(patient_items)} items")
+
             else:
                 # Patient's items exceed PALLET_SIZE_LIMIT, apply splitting policy
                 if POLICY_ORDER_TO_JOB == "MAX_PER_JOB":
@@ -95,6 +96,9 @@ class Manager(OrderReceiver):
                             self.logger.log_event(
                                 "Manager", f"Created job {job.id_job} for patient {patient.id_patient} with {len(job_items)} items (split job)")
                         self.proc_build.add_to_queue(job)
+
+                        # Validation code
+                        print("Manager", f"Created job {job.id_job} for patient {patient.id_patient} with {len(patient_items)} items")
 
                 # Additional policies can be implemented here if needed
 

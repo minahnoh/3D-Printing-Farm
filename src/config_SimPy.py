@@ -7,8 +7,8 @@ import random
 SIM_TIME = 7 * 24 * 60  # (unit: minutes)
 
 # Logging and visualization settings
-EVENT_LOGGING = True  # Event logging enable/disable flag
-DETAILED_STATS_ENABLED = True  # Detailed statistics display flag
+EVENT_LOGGING = False  # Event logging enable/disable flag
+DETAILED_STATS_ENABLED = False  # Detailed statistics display flag
 
 # Visualization flags
 GANTT_CHART_ENABLED = True  # Gantt chart visualization enable/disable flag
@@ -36,7 +36,7 @@ CAPACITY_MACHINE_WASH = 2  # Job capacity for wash machines
 CAPACITY_MACHINE_DRY = 2  # Job capacity for dry machines
 
 # Process settings
-DEFECT_RATE_PROC_BUILD = 0.07  # 5% defect rate in build process
+DEFECT_RATE_PROC_BUILD = 0.1  # 5% defect rate in build process
 NUM_WORKERS_IN_INSPECT = 5  # Number of workers in inspection process
 
 
@@ -63,7 +63,7 @@ def NUM_PATIENTS_PER_ORDER(): return random.randint(
 
 
 def NUM_ITEMS_PER_PATIENT(): return random.randint(
-    50, 70)
+    70, 70)
 
 
 # Customer settings
