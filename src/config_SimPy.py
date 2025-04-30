@@ -8,7 +8,7 @@ SIM_TIME = 7 * 24 * 60  # (unit: minutes)
 
 # Logging and visualization settings
 EVENT_LOGGING = True  # Event logging enable/disable flag
-DETAILED_STATS_ENABLED = False  # Detailed statistics display flag
+DETAILED_STATS_ENABLED = True  # Detailed statistics display flag
 
 # Visualization flags
 GANTT_CHART_ENABLED = True  # Gantt chart visualization enable/disable flag
