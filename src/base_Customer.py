@@ -64,7 +64,7 @@ class Patient:
             items.append(item)
 
             # # Debugging
-            print(f"[DEBUG] Order {id_order} - Patient {id_patient}: Created Item {item_id} with type: {item.type_item}")
+            # print(f"[DEBUG] Order {id_order} - Patient {id_patient}: Created Item {item_id} with type: {item.type_item}")
 
         return items
 
@@ -125,9 +125,9 @@ class Order:
             patients.append(patient)
 
             ## Debugging: Print patient and item details
-            print(f"[Debug] Order {id_order}: Created Patient {patient_id} with items:")
-            for item in patient.list_items:
-                 print(f"    Item ID: {item.id_item} (Type: {item.type_item})")
+            # print(f"[Debug] Order {id_order}: Created Patient {patient_id} with items:")
+            # for item in patient.list_items:
+            #    print(f"    Item ID: {item.id_item} (Type: {item.type_item})")
 
         return patients
 
@@ -186,10 +186,10 @@ class Customer:
             #     "Order", f"Created Order {order.id_order} (Patients: {order.num_patients}, Total items: {sum(len(patient.list_items) for patient in order.list_patients)})")
             
             # # Debugging
-            patient_details_str = "\n".join(
-                f"    Patient ID: {patient.id_patient}\n" +
-                "\n".join(f"        Item ID: {item.id_item}" for item in patient.list_items) for patient in order.list_patients)
-            print(f"check: Order {order.id_order} consists of patients and their items:\n{patient_details_str}")
+            # patient_details_str = "\n".join(
+            #    f"    Patient ID: {patient.id_patient}\n" +
+            #    "\n".join(f"        Item ID: {item.id_item}" for item in patient.list_items) for patient in order.list_patients)
+            # print(f"check: Order {order.id_order} consists of patients and their items:\n{patient_details_str}")
             
             # Send the order
             self.send_order(order)
@@ -226,10 +226,10 @@ class SimpleOrderReceiver(OrderReceiver):
         self.received_orders.append(order)
         
         # # Debugging
-        patient_details_str = "\n".join(
-            f"    Patient ID: {patient.id_patient}\n" +
-            "\n".join(f"        Item ID: {item.id_item}" for item in patient.list_items) for patient in order.list_patients)
-        print(f"[Debug] Order {order.id_order} consists of patients and their items:\n{patient_details_str}")
+        # patient_details_str = "\n".join(
+        #   f"    Patient ID: {patient.id_patient}\n" +
+        #   "\n".join(f"        Item ID: {item.id_item}" for item in patient.list_items) for patient in order.list_patients)
+        # print(f"[Debug] Order {order.id_order} consists of patients and their items:\n{patient_details_str}")
 
-        self.logger.log_event(
-            "Order", f"OrderReceiver recevied Order {order.id_order} (Patients: {order.num_patients}, Total items: {sum(len(patient.list_items) for patient in order.list_patients)})")
+        # self.logger.log_event(
+        #   "Order", f"OrderReceiver recevied Order {order.id_order} (Patients: {order.num_patients}, Total items: {sum(len(patient.list_items) for patient in order.list_patients)})")

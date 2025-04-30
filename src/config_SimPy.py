@@ -8,7 +8,7 @@ SIM_TIME = 7 * 24 * 60  # (unit: minutes)
 
 # Logging and visualization settings
 EVENT_LOGGING = True  # Event logging enable/disable flag
-DETAILED_STATS_ENABLED = True  # Detailed statistics display flag
+DETAILED_STATS_ENABLED = False  # Detailed statistics display flag
 
 # Visualization flags
 GANTT_CHART_ENABLED = True  # Gantt chart visualization enable/disable flag
@@ -57,16 +57,16 @@ POLICY_ORDER_TO_JOB = "MAX_PER_JOB"
 
 
 def NUM_PATIENTS_PER_ORDER(): return random.randint(
-    2, 2)
+    5, 5)
 
 # Number of items per patient
 
 
 def NUM_ITEMS_PER_PATIENT(): return random.randint(
-    5, 5)
+    70, 70)
 
 
 # Customer settings
-CUST_ORDER_CYCLE = 2 * 24 * 60  # Customer order cycle (1 week in minutes)
+CUST_ORDER_CYCLE = 7 * 24 * 60  # Customer order cycle (1 week in minutes)
 # Order settings
 ORDER_DUE_DATE = 7 * 24 * 60  # Order due date (1 week in minutes)

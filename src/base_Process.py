@@ -56,6 +56,9 @@ class Process:
         #     self.logger.log_event(
         #         "Process", f"Process {self.name_process} connected to {next_process.name_process}")
 
+        #  validation
+        # print(f"Process {self.name_process} connected to {next_process.name_process}")
+
     def register_processor(self, processor):
         """Register processor (Machine or Worker). Used for process initialization."""
         # Add to processor list
@@ -76,7 +79,13 @@ class Process:
         # if self.logger:
         #     self.logger.log_event(
         #         "Resource", f"Registered {processor.type_processor} {processor_name} to process {self.name_process}")
-
+        
+        # validation
+        #if processor_resource.processor_type == "Machine":
+        #   print("Resource", f"Registered {processor_resource.name} | Capacity {processor_resource.capacity} | Processing time {processor_resource.processing_time} | to process {self.name_process}")
+        #else:
+        #   print("Resource", f"Registered {processor_resource.name} | Processing time {processor_resource.processing_time} |to process {self.name_process}")
+    
     def add_to_queue(self, job):
         """Add job to queue"""
         job.time_waiting_start = self.env.now
@@ -154,11 +163,11 @@ class Process:
             try:
                 for i in range(min(remaining_capacity, self.job_store.size)):
                     if not self.job_store.is_empty:
-                        # print(
-                        #     f"[DEBUG] {self.name_process}: attempting to get job {i+1}")
+                        print(
+                            f"[DEBUG] {self.name_process}: attempting to get capacity {i+1}")
                         job = yield self.job_store.get()
-                        # print(
-                        #     f"[DEBUG] {self.name_process}: retrieved job {job.id_job}")
+                        print(
+                            f"[DEBUG] {self.name_process}: retrieved job {job.id_job}")
                         jobs_to_assign.append(job)
             except Exception as e:
                 # Continue if unable to get job from JobStore
