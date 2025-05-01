@@ -13,7 +13,7 @@ DETAILED_STATS_ENABLED = True  # Detailed statistics display flag
 # Visualization flags
 GANTT_CHART_ENABLED = True  # Gantt chart visualization enable/disable flag
 VIS_STAT_ENABLED = False  # Statistical graphs visualization enable/disable flag
-SHOW_GANTT_DEBUG = False  # 기본값은 False로 설정
+SHOW_GANTT_DEBUG = True  # 기본값은 False로 설정
 
 
 """ Process settings """
@@ -22,10 +22,10 @@ SHOW_GANTT_DEBUG = False  # 기본값은 False로 설정
 PALLET_SIZE_LIMIT = 50
 
 # Process time settings (in minutes)
-PROC_TIME_BUILD = 180  # Process time for build (unit: minutes)
+PROC_TIME_BUILD = 120  # Process time for build (unit: minutes)
 PROC_TIME_WASH = 120  # Process time for wash (unit: minutes)
-PROC_TIME_DRY = 120  # Process time for dry (unit: minutes)
-PROC_TIME_INSPECT = 120  # Process time for inspect per item (unit: minutes)
+PROC_TIME_DRY = 60  # Process time for dry (unit: minutes)
+PROC_TIME_INSPECT = 60  # Process time for inspect per item (unit: minutes)
 
 # Machine settings
 NUM_MACHINES_BUILD = 3  # Number of 3D print machines
@@ -57,7 +57,7 @@ POLICY_ORDER_TO_JOB = "MAX_PER_JOB"
 
 
 def NUM_PATIENTS_PER_ORDER(): return random.randint(
-    5, 5)
+    3, 3)
 
 # Number of items per patient
 

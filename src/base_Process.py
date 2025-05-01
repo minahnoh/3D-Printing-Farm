@@ -164,10 +164,10 @@ class Process:
                 for i in range(min(remaining_capacity, self.job_store.size)):
                     if not self.job_store.is_empty:
                         # print(
-                        #     f"[DEBUG] {self.name_process}: attempting to get job {i+1}")
+                        #    f"[DEBUG] {self.name_process}: attempting to get capacity {i+1}")
                         job = yield self.job_store.get()
                         # print(
-                        #     f"[DEBUG] {self.name_process}: retrieved job {job.id_job}")
+                        #    f"[DEBUG] {self.name_process}: retrieved job {job.id_job}")
                         jobs_to_assign.append(job)
             except Exception as e:
                 # Continue if unable to get job from JobStore
@@ -202,7 +202,7 @@ class Process:
             if self.logger:
                self.logger.log_event(
                    "Processing", f"Assigning job {job.id_job} to {processor_resource.name}")
-
+               
             # Record job start time
             job.time_processing_start = self.env.now
 
