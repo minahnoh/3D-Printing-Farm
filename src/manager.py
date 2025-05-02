@@ -77,13 +77,7 @@ class Manager(OrderReceiver):
                     self.logger.log_event(
                         "Manager", f"Created job {job.id_job} for patient {patient.id_patient} with {len(patient_items)} items")
                 
-                # Validation code
-                print("Manager", f"Created job {job.id_job} for patient {patient.id_patient} with {len(patient_items)} items")
-
                 self.proc_build.add_to_queue(job)
-
-                # Validation code
-                print("Manager", f"Created job {job.id_job} for patient {patient.id_patient} with {len(patient_items)} items")
 
             else:
                 # Patient's items exceed PALLET_SIZE_LIMIT, apply splitting policy

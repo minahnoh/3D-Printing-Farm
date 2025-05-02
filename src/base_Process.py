@@ -207,7 +207,7 @@ class Process:
             job.time_processing_start = self.env.now
 
             # Record job processing history
-            process_step = self.create_process_step(job, processor_resource)
+            process_step = self.create_process_step(job, processor_resource)    
             if not hasattr(job, 'processing_history'):
                 job.processing_history = []
             job.processing_history.append(process_step)
@@ -232,7 +232,7 @@ class Process:
             for step in job.processing_history:
                 if step['process'] == self.name_process and step['end_time'] is None:
                     step['end_time'] = self.env.now
-                    step['duration'] = self.env.now - step['start_time']
+                    step['duration'] = self.env.now - step['start_time'] 
 
             # Track completed jobs
             self.completed_jobs.append(job)
@@ -241,6 +241,13 @@ class Process:
             if self.logger:
                self.logger.log_event(
                    "Processing", f"Completed processing job {job.id_job} on {processor_resource.name}")
+            # validaiton code
+            if self.logger:
+                self.logger.log_event(
+                    "Validation", f"Created process step: {process_step}"
+                    )
+            else:
+                print("Created process step:", process_step)   
 
             # Send job to next process
             self.send_job_to_next(job)

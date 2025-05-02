@@ -22,10 +22,10 @@ SHOW_GANTT_DEBUG = True  # 기본값은 False로 설정
 PALLET_SIZE_LIMIT = 50
 
 # Process time settings (in minutes)
-PROC_TIME_BUILD = 120  # Process time for build (unit: minutes)
-PROC_TIME_WASH = 120  # Process time for wash (unit: minutes)
-PROC_TIME_DRY = 60  # Process time for dry (unit: minutes)
-PROC_TIME_INSPECT = 60  # Process time for inspect per item (unit: minutes)
+PROC_TIME_BUILD = 180 # Process time for build (unit: minutes)
+PROC_TIME_WASH = 120  #Process time for wash (unit: minutes)
+PROC_TIME_DRY = 120  # Process time for dry (unit: minutes)
+PROC_TIME_INSPECT = 120  # Process time for inspect per item (unit: minutes)
 
 # Machine settings
 NUM_MACHINES_BUILD = 3  # Number of 3D print machines
@@ -63,7 +63,7 @@ def NUM_PATIENTS_PER_ORDER(): return random.randint(
 
 
 def NUM_ITEMS_PER_PATIENT(): return random.randint(
-    70, 70)
+    50, 50)
 
 
 # Customer settings
