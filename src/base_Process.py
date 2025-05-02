@@ -244,7 +244,7 @@ class Process:
             # validaiton code
             if self.logger:
                 self.logger.log_event(
-                    "Validation", f"Created process step: {process_step}"
+                    "Validation", f"{self.name_process}: {processor_resource.name} started job{job.id_job} at {job.time_processing_start} and finished at {self.env.now}, duration:{step['duration']}"
                     )
             else:
                 print("Created process step:", process_step)   
