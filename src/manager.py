@@ -130,9 +130,10 @@ class Manager(OrderReceiver):
                 if self.logger:
                     self.logger.log_event(
                         "Manager", f"Created rework job {job.id_job} with {len(items_for_job)} defective items (added to end of queue)")
+
                     self.logger.log_event(
                         "Manager", f"Remaining defective items: {len(self.proc_inspect.defective_items)}")
-
+                
     def get_processes(self):
         """Return processes as a dictionary for statistics collection"""
         return {

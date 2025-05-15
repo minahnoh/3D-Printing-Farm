@@ -99,9 +99,9 @@ class Process:
         # Create new trigger immediately
         self.job_added_trigger = self.env.event()
 
-        if self.logger:
-            self.logger.log_event(
-                "Queue", f"Added job {job.id_job} to {self.name_process} queue. Queue length: {self.job_store.size}")
+        # if self.logger:
+        #   self.logger.log_event(
+        #       "Queue", f"Added job {job.id_job} to {self.name_process} queue. Queue length: {self.job_store.size}")
 
     def run(self):
         """Event-based process execution"""
@@ -199,9 +199,9 @@ class Process:
             # Register job with processor
             processor_resource.start_job(job)
 
-            if self.logger:
-               self.logger.log_event(
-                   "Processing", f"Assigning job {job.id_job} to {processor_resource.name}")
+            # if self.logger:
+            #  self.logger.log_event(
+            #      "Processing", f"Assigning job {job.id_job} to {processor_resource.name}")
                
             # Record job start time
             job.time_processing_start = self.env.now
@@ -238,16 +238,16 @@ class Process:
             self.completed_jobs.append(job)
 
             # Log record
-            if self.logger:
-               self.logger.log_event(
-                   "Processing", f"Completed processing job {job.id_job} on {processor_resource.name}")
+            # if self.logger:
+            #  self.logger.log_event(
+            #      "Processing", f"Completed processing job {job.id_job} on {processor_resource.name}")
             # validaiton code
-            if self.logger:
-                self.logger.log_event(
-                    "Validation", f"{self.name_process}: {processor_resource.name} started job{job.id_job} at {job.time_processing_start} and finished at {self.env.now}, duration:{step['duration']}"
-                    )
-            else:
-                print("Created process step:", process_step)   
+            # if self.logger:
+            #  self.logger.log_event(
+            #       "Validation", f"{self.name_process}: {processor_resource.name} started job{job.id_job} at {job.time_processing_start} and finished at {self.env.now}, duration:{step['duration']}"
+            #       )
+            # else:
+            #   print("Created process step:", process_step)   
 
             # Send job to next process
             self.send_job_to_next(job)
@@ -274,9 +274,9 @@ class Process:
             # Create new trigger immediately
             self.resource_trigger = self.env.event()
 
-        if self.logger:
-            self.logger.log_event(
-                "Resource", f"Released {processor_resource.name} in {self.name_process}")
+        # if self.logger:
+        #   self.logger.log_event(
+        #       "Resource", f"Released {processor_resource.name} in {self.name_process}")
 
     def create_process_step(self, job, processor_resource):
         """Create process step for job history"""
@@ -293,15 +293,19 @@ class Process:
     def send_job_to_next(self, job):
         """Send job to next process"""
         if self.next_process:
-            if self.logger:
-                self.logger.log_event(
-                    "Process Flow", f"Moving job {job.id_job} from {self.name_process} to {self.next_process.name_process}")
+        # if self.logger:
+        #       self.logger.log_event(
+        #           "Process Flow", f"Moving job {job.id_job} from {self.name_process} to {self.next_process.name_process}")
             # Add job to next process queue
             self.next_process.add_to_queue(job)
             return True
         else:
             # Final process or no next process set
             if self.logger:
-                self.logger.log_event(
-                    "Process Flow", f"Job {job.id_job} completed at {self.name_process} (final process)")
+               self.logger.log_event(
+                   "Process Flow", f"Job {job.id_job} completed at {self.name_process} (final process)")
+            # vadlidation code  
+            print("======================================================================")      
+            print(f"The number of remaining defecitve item: {len(self.defective_items)}")       
+            print("======================================================================")    
             return False

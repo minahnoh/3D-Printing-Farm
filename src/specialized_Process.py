@@ -85,6 +85,11 @@ class Proc_Inspect(Process):
                     # Identify defects
                     if item.is_defect:
                         defective_items.append(item)
+                        # validation code
+                        if self.logger:
+                           self.logger.log_event(
+                            "Defects Validation", f"Added item {item.id_item} of patient {item.id_patient} to defective items")
+                
                     else:
                         # Mark normal items as completed
                         item.is_completed = True
@@ -102,6 +107,8 @@ class Proc_Inspect(Process):
                     if len(self.defective_items) >= POLICY_NUM_DEFECT_PER_JOB:
                         # Create a job for the defective items
                         self.manager.create_job_for_defects()
+                
+
 
         # Return True to indicate processing was done
         return True
