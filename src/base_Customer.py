@@ -78,6 +78,7 @@ class Patient:
         """Check if all items for this patient are completed"""
         if all(item.is_completed for item in self.list_items):
             self.is_completed = True
+        print(f"items of paitent{self.id_patient} are completed")
         return self.is_completed
 
 

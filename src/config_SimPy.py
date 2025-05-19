@@ -67,6 +67,6 @@ def NUM_ITEMS_PER_PATIENT(): return random.randint(
 
 
 # Customer settings
-CUST_ORDER_CYCLE = 3 * 24 * 60  # Customer order cycle (1 week in minutes)
+CUST_ORDER_CYCLE = 4 * 24 * 60  # Customer order cycle (1 week in minutes)
 # Order settings
 ORDER_DUE_DATE = 7 * 24 * 60  # Order due date (1 week in minutes)

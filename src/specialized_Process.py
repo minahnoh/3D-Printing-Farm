@@ -93,7 +93,7 @@ class Proc_Inspect(Process):
                     else:
                         # Mark normal items as completed
                         item.is_completed = True
-
+                                
                 # Process defective items
                 if defective_items:
                     # Store defective items
@@ -102,6 +102,7 @@ class Proc_Inspect(Process):
                     if self.logger:
                         self.logger.log_event(
                             "Inspection", f"Found {len(defective_items)} defective items in job {job.id_job}")
+                        
 
                     # Check if enough defective items to create a new job
                     if len(self.defective_items) >= POLICY_NUM_DEFECT_PER_JOB:

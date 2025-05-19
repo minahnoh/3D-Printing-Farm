@@ -304,8 +304,10 @@ class Process:
             if self.logger:
                self.logger.log_event(
                    "Process Flow", f"Job {job.id_job} completed at {self.name_process} (final process)")
-            # vadlidation code  
-            print("======================================================================")      
-            print(f"The number of remaining defecitve item: {len(self.defective_items)}")       
-            print("======================================================================")    
+
+            # vadlidation code to check the remaining defective item
+            # print("======================================================================")      
+            # print(f"The number of remaining defecitve item: {len(self.defective_items)}")       
+            # print("======================================================================")    
+
             return False
