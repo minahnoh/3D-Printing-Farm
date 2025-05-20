@@ -1,5 +1,6 @@
 from config_SimPy import *
-
+#
+CURRENT_ENV = None
 
 class Item:
     """
@@ -51,6 +52,10 @@ class Patient:
         self.is_completed = False
         self.item_counter = 1
 
+        self.time_start = None #시작시간
+        self.time_end = None #완료시간
+        self.makespan = None #총 소요시간
+
         # Create items for this patient using the provided function
         self.list_items = self._create_items_for_patient(
             self.id_order, self.id_patient, self.num_items)
@@ -67,7 +72,7 @@ class Patient:
             # print(f"[DEBUG] Order {id_order} - Patient {id_patient}: Created Item {item_id} with type: {item.type_item}")
 
         return items
-
+      
     def _get_next_item_id(self):
         """Get next item ID and increment counter"""
         item_id = self.item_counter
@@ -78,9 +83,13 @@ class Patient:
         """Check if all items for this patient are completed"""
         if all(item.is_completed for item in self.list_items):
             self.is_completed = True
-        print(f"items of paitent{self.id_patient} are completed")
-        return self.is_completed
 
+            self.time_end = CURRENT_ENV.now  # 현재 시뮬레이션 시간
+            self.makespan = self.time_end - self.time_start
+            print(f"[Patient {self.id_patient}] 모든 아이템 완료! Makespan: {self.makespan}분")
+
+        return self.is_completed
+    
 
 class Order:
     """
@@ -129,7 +138,6 @@ class Order:
             # print(f"[Debug] Order {id_order}: Created Patient {patient_id} with items:")
             # for item in patient.list_items:
             #     print(f"    Item ID: {item.id_item} (Type: {item.type_item})")
-
         return patients
 
     def _get_next_patient_id(self):
@@ -140,12 +148,15 @@ class Order:
 
     def check_completion(self):
         """Check if all patients in this order are completed"""
+        for patient in self.list_patients:
+            if not patient.check_completion():
+                print(f"all item of patient{patient.id_patient} is done")
         if all(patient.check_completion() for patient in self.list_patients):
             return True
         return False
 
 
-class Customer:
+class Customer():
     """
     Class representing a customer in the system.
 
@@ -158,12 +169,18 @@ class Customer:
     """
 
     def __init__(self, env, order_receiver, logger):
+        #
+        global CURRENT_ENV
+        CURRENT_ENV = env
+        #
         self.env = env
         self.order_receiver = order_receiver
         self.logger = logger
 
         # Initialize ID counters
         self.order_counter = 1
+        #add
+        self.patient_conter = 1
 
         # Automatically start the process when the Customer is created
         self.processing = env.process(self.create_order())
@@ -194,6 +211,8 @@ class Customer:
             
             # Send the order
             self.send_order(order)
+            #log mean makespan
+            self.mean_makespan(order)
 
             # Wait for next order cycle
             yield self.env.timeout(CUST_ORDER_CYCLE)
@@ -201,14 +220,26 @@ class Customer:
     def send_order(self, order):
         """Send the order to the receiver"""
         # if self.logger:
-        #     self.logger.log_event(
-        #         "Order", f"Sending Order {order.id_order} to processor")
+        #    self.logger.log_event(
+        #        "Order", f"Sending Order {order.id_order} to processor")
         self.order_receiver.receive_order(order)
+    
+    def mean_makespan(self,order):
+        #order_id = self.get_next_order_id()
+        #item = Item(order_id, id_patient=1, id_item = 1)
+        #id_patient = item.id_patient
+        #patient = Patient(order_id, id_patient)
+        #print(f"all item of patient{id_patient} is done")
+        order.check_completion()
+            #print(f"all item of patient{id_patient} is done")
+        
 
 
+
+
+        
 class OrderReceiver:
     """Interface for order receiving objects"""
-
     def receive_order(self, order):
         """Method to process orders (implemented by subclasses)"""
         pass

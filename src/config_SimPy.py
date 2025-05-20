@@ -11,7 +11,7 @@ EVENT_LOGGING = True  # Event logging enable/disable flag
 DETAILED_STATS_ENABLED = True  # Detailed statistics display flag
 
 # Visualization flags
-GANTT_CHART_ENABLED = True  # Gantt chart visualization enable/disable flag
+GANTT_CHART_ENABLED = False  # Gantt chart visualization enable/disable flag
 VIS_STAT_ENABLED = False  # Statistical graphs visualization enable/disable flag
 SHOW_GANTT_DEBUG = False  # 기본값은 False로 설정
 

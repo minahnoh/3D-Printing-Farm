@@ -133,7 +133,7 @@ class Manager(OrderReceiver):
 
                     self.logger.log_event(
                         "Manager", f"Remaining defective items: {len(self.proc_inspect.defective_items)}")
-                
+                    
     def get_processes(self):
         """Return processes as a dictionary for statistics collection"""
         return {
