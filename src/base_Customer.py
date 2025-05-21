@@ -1,6 +1,4 @@
 from config_SimPy import *
-#
-CURRENT_ENV = None
 
 class Item:
     """
@@ -23,6 +21,13 @@ class Item:
         self.is_completed = False
         self.is_defect = False
 
+        self.time_completed = None  # 완료 시점 기록
+
+    def check_completion(self,env):
+        """Item 완료 처리 및 완료 시간 기록"""
+        self.is_completed = True
+        self.time_completed = env.now
+
 
 class Patient:
     """
@@ -37,7 +42,7 @@ class Patient:
         item_counter: Counter for item IDs
     """
 
-    def __init__(self, id_order, id_patient):
+    def __init__(self, env, id_order, id_patient):
         """
         Create a patient with the given IDs.
 
@@ -45,6 +50,8 @@ class Patient:
             id_order: ID of the order this patient belongs to
             id_patient: ID of this patient
         """
+        self.env = env
+        
         self.id_order = id_order
         self.id_patient = id_patient
         self.num_items = NUM_ITEMS_PER_PATIENT()
@@ -52,7 +59,7 @@ class Patient:
         self.is_completed = False
         self.item_counter = 1
 
-        self.time_start = None #시작시간
+        self.time.start = env.now #환자 생성 시점
         self.time_end = None #완료시간
         self.makespan = None #총 소요시간
 
@@ -83,10 +90,9 @@ class Patient:
         """Check if all items for this patient are completed"""
         if all(item.is_completed for item in self.list_items):
             self.is_completed = True
-
-            self.time_end = CURRENT_ENV.now  # 현재 시뮬레이션 시간
+            self.time_end = max(item.time_completed for item in self.list_items if item.time_completed is not None)
             self.makespan = self.time_end - self.time_start
-            print(f"[Patient {self.id_patient}] 모든 아이템 완료! Makespan: {self.makespan}분")
+            print(f"Patient {self.id_patient} completed. Makespan: {self.makespan}")
 
         return self.is_completed
     
@@ -106,13 +112,15 @@ class Order:
 
     """
 
-    def __init__(self, id_order):
+    def __init__(self,env, id_order):
         """
         Create an order with the given ID.
 
         Args:
             id_order: ID of this order 
         """
+        self.env = env
+
         self.id_order = id_order
         self.num_patients = NUM_PATIENTS_PER_ORDER()
         self.list_patients = []
@@ -146,14 +154,11 @@ class Order:
         self.patient_counter += 1
         return patient_id
 
-    def check_completion(self):
+    def check_completion(self,patient):
         """Check if all patients in this order are completed"""
-        for patient in self.list_patients:
-            if not patient.check_completion():
-                print(f"all item of patient{patient.id_patient} is done")
         if all(patient.check_completion() for patient in self.list_patients):
             return True
-        return False
+        return False 
 
 
 class Customer():
@@ -169,18 +174,12 @@ class Customer():
     """
 
     def __init__(self, env, order_receiver, logger):
-        #
-        global CURRENT_ENV
-        CURRENT_ENV = env
-        #
         self.env = env
         self.order_receiver = order_receiver
         self.logger = logger
 
         # Initialize ID counters
         self.order_counter = 1
-        #add
-        self.patient_conter = 1
 
         # Automatically start the process when the Customer is created
         self.processing = env.process(self.create_order())
@@ -211,9 +210,7 @@ class Customer():
             
             # Send the order
             self.send_order(order)
-            #log mean makespan
-            self.mean_makespan(order)
-
+            
             # Wait for next order cycle
             yield self.env.timeout(CUST_ORDER_CYCLE)
 
@@ -223,21 +220,7 @@ class Customer():
         #    self.logger.log_event(
         #        "Order", f"Sending Order {order.id_order} to processor")
         self.order_receiver.receive_order(order)
-    
-    def mean_makespan(self,order):
-        #order_id = self.get_next_order_id()
-        #item = Item(order_id, id_patient=1, id_item = 1)
-        #id_patient = item.id_patient
-        #patient = Patient(order_id, id_patient)
-        #print(f"all item of patient{id_patient} is done")
-        order.check_completion()
-            #print(f"all item of patient{id_patient} is done")
-        
-
-
-
-
-        
+            
 class OrderReceiver:
     """Interface for order receiving objects"""
     def receive_order(self, order):

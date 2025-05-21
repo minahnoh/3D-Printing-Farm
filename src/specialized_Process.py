@@ -93,6 +93,7 @@ class Proc_Inspect(Process):
                     else:
                         # Mark normal items as completed
                         item.is_completed = True
+                        
                                 
                 # Process defective items
                 if defective_items:
